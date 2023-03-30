@@ -1,5 +1,5 @@
 import "./App2.css";
-import { useState } from "react";
+import { useState} from "react";
 import Axios from "axios";
 
 function App2() {
@@ -11,6 +11,7 @@ function App2() {
     const [position,setPosition] = useState("1");
     const [equipmentList, setEquipmentList] = useState([]);
     let user="Madoka";
+
 
     document.addEventListener('drop',(e) =>{
         e.preventDefault();
@@ -55,34 +56,29 @@ function App2() {
           ]);
         });
       };
-      //獲取設備資訊
-      const getEquipment = () => {
+
+    //獲取設備資訊和刷新
+    const getandflash=()=>{
+          let a="",b="",c="",d="",e="",f="";
+        //獲取設備資訊
         Axios.get("http://localhost:3001/equipment").then((response) => {
-          setEquipmentList(response.data);
+          let tmp =response.data.length;
+          for(let i=0; i<tmp;i++){
+            a=response.data[i].name;
+            b=response.data[i].model;
+            c=response.data[i].category;
+            d=response.data[i].year;
+            e=response.data[i].code;
+            f=response.data[i].position;
+            document.getElementById("p"+i).innerText=a;
+            if(c==="printer"){document.getElementById(i).src="printer.png";}else if(c==="cmp"){document.getElementById(i).src="cmp.png";}else if(c==="ups"){document.getElementById(i).src="ups.png";}
+            setEquipmentList(response.data);
+          };
         });
-      };
-      //刷新顯示設備
-      const flashEquipment=()=>{
-        let tmp =equipmentList.length;
-        let a="",b="",c="",d="",e="",f="";
-        for(let i=0; i<tmp;i++){
-          a=equipmentList[i].name;
-          b=equipmentList[i].model;
-          c=equipmentList[i].category;
-          d=equipmentList[i].year;
-          e=equipmentList[i].code;
-          f=equipmentList[i].position;
-          document.getElementById("p"+i).innerText=a;
-          if(c=="printer"){document.getElementById(i).src="printer.png";}else if(c=="cmp"){document.getElementById(i).src="cmp.png";};
-          console.log(a,b,c,d,e,f);
-        };
       }
-    //獲取設備資訊 顯示在console.log
+    //獲取設備資訊
     const test =() =>{
-      getEquipment();
-      console.log(equipmentList);
-      flashEquipment();
-      
+      getandflash()
     };
    //確認code和position是否有衝突和最大上限數量
    const check = (c,p) => {
@@ -90,8 +86,8 @@ function App2() {
    if(tmp<20){
    for(let i=0;i<=tmp;i++){ 
    console.log(i,equipmentList[i].code,equipmentList[i].position);
-   if(equipmentList[i].code==c){window.alert("編號已存在"); return false;};
-   if(equipmentList[i].position==position){window.alert("位置上已有設備"); return false;}else{return true;}
+   if(equipmentList[i].code===c){window.alert("編號已存在"); return false;};
+   if(equipmentList[i].position===position){window.alert("位置上已有設備"); return false;}else{return true;}
   }
   }else{ window.alert("設備已達最大上限"); return false;}};
 
@@ -110,7 +106,7 @@ function App2() {
   }
 
 
-
+  
     function deldata(e) {
         setCode(prompt('編號','123456789'));
         if (code == null || "") {
@@ -119,6 +115,8 @@ function App2() {
             window.alert("刪除成功");
         }
     }
+
+    window.onload = getandflash()
 return(
     <div className="grid-container">
         <div className="item1">

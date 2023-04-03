@@ -11,28 +11,6 @@ function App2() {
     const [position,setPosition] = useState("1");
     const [equipmentList, setEquipmentList] = useState([]);
     let user="Madoka";
-
-
-    document.addEventListener('drop',(e) =>{
-        e.preventDefault();
-        e.target.alt="";
-        e.target.src="printer.png";
-        console.log(e.target.id);
-        console.log("拖移成功!");
-    },false);
-    
-    document.addEventListener('dragstart',(e) =>{
-        e.target.style.border='5px dashed yellow';
-        console.log("開始拖移");
-    }, false);
-    
-    document.addEventListener('dragend',(e) =>{
-        e.target.style.border='none';
-        console.log("拖移結束");
-    },false);
-    
-
-   
     //新增設備
     const  addEquipment = () => {
         Axios.post("http://localhost:3001/createequipment", {
@@ -55,21 +33,16 @@ function App2() {
             },
           ]);
         });
-      };
-
+      }
     //獲取設備資訊和刷新
     const getandflash=()=>{
-          let a="",b="",c="",d="",e="",f="";
+      let a="",c="";
         //獲取設備資訊
         Axios.get("http://localhost:3001/equipment").then((response) => {
           let tmp =response.data.length;
           for(let i=0; i<tmp;i++){
             a=response.data[i].name;
-            b=response.data[i].model;
             c=response.data[i].category;
-            d=response.data[i].year;
-            e=response.data[i].code;
-            f=response.data[i].position;
             document.getElementById("p"+i).innerText=a;
             if(c==="printer"){document.getElementById(i).src="printer.png";}else if(c==="cmp"){document.getElementById(i).src="cmp.png";}else if(c==="ups"){document.getElementById(i).src="ups.png";}
             setEquipmentList(response.data);
@@ -79,7 +52,7 @@ function App2() {
     //獲取設備資訊
     const test =() =>{
       getandflash()
-    };
+    }
    //確認code和position是否有衝突和最大上限數量
    const check = (c,p) => {
    let tmp=equipmentList.length;
@@ -94,7 +67,7 @@ function App2() {
   const inputdata =() =>{
     const a = document.getElementById("footerform");
     if(check()){addEquipment(); {window.alert("輸入成功"); a.style.visibility= "none";}}else{window.alert("輸入失敗");};
-  };
+  }
 
   const showinputdata= ()=>{
     const a =document.getElementById("footerform")
@@ -104,19 +77,25 @@ function App2() {
     const a=document.getElementById("footerform")
     a.style.visibility="hidden";
   }
-
-
-  
-    function deldata(e) {
-        setCode(prompt('編號','123456789'));
-        if (code == null || "") {
-            window.alert("已經取消輸入");
-        } else {
-            window.alert("刪除成功");
-        }
+  const deldata = (e) =>{
+    setCode(prompt('編號','123456789'));
+    if (code == null || "") {
+        window.alert("已經取消輸入");
+    } else {
+        window.alert("刪除成功");
     }
+  }
 
-    window.onload = getandflash()
+  const showdata =(e) =>{
+  setName(equipmentList[e.target.id].name)
+  setModel(equipmentList[e.target.id].model)
+  setCategory(equipmentList[e.target.id].category)
+  setYear(equipmentList[e.target.id].year)
+  setCode(equipmentList[e.target.id].code)
+  setPosition(equipmentList[e.target.id].position)
+  }
+  window.onload = getandflash()
+
 return(
     <div className="grid-container">
         <div className="item1">
@@ -139,26 +118,26 @@ return(
         <button onClick={showinputdata}>新增印表機</button>
         <button onClick={delinputdata}>刪除印表機</button>
         </div>
-        <div className="item3 e"><img id="0"src="no.png" alt="" draggable="true" height={25} width={25}/><p id="p0">我是1號</p></div>
-        <div className="item4 e"><img id="1"src="no.png" alt="" draggable="true" height={25} width={25}/><p id="p1">我是2號</p></div>
-        <div className="item5 e"><img id="2"src="no.png" alt="" draggable="true" height={25} width={25}/><p id="p2">我是3號</p></div>
-        <div className="item6 e"><img id="3"src="no.png" alt="" draggable="true" height={25} width={25}/><p id="p3">我是4號</p></div>
-        <div className="item7 e"><img id="4"src="no.png" alt="" draggable="true" height={25} width={25}/><p id="p4">我是5號</p></div>
-        <div className="item8 e"><img id="5"src="no.png" alt="" draggable="true" height={25} width={25}/><p id="p5">我是6號</p></div>
-        <div className="item9 e"><img id="6"src="no.png" alt="" draggable="true" height={25} width={25}/><p id="p6">我是7號</p></div>
-        <div className="item10 e"><img id="7"src="no.png" alt="" draggable="true" height={25} width={25}/><p id="p7">我是8號</p></div>
-        <div className="item11 e"><img id="8"src="no.png" alt="" draggable="true" height={25} width={25}/><p id="p8">我是9號</p></div>
-        <div className="item12 e"><img id="9"src="no.png" alt="" draggable="true" height={25} width={25}/><p id="p9">我是10號</p></div>
-        <div className="item13 e"><img id="10"src="no.png" alt="" draggable="true" height={25} width={25}/><p id="p10">我是11號</p></div>
-        <div className="item14 e"><img id="11"src="no.png" alt="" draggable="true" height={25} width={25}/><p id="p11">我是12號</p></div>
-        <div className="item15 e"><img id="12"src="no.png" alt="" draggable="true" height={25} width={25}/><p id="p12">我是13號</p></div>
-        <div className="item16 e"><img id="13"src="no.png" alt="" draggable="true" height={25} width={25}/><p id="p13">我是14號</p></div>
-        <div className="item17 e"><img id="14"src="no.png" alt="" draggable="true" height={25} width={25}/><p id="p14">我是15號</p></div>
-        <div className="item18 e"><img id="15"src="no.png" alt="" draggable="true" height={25} width={25}/><p id="p15">我是16號</p></div>
-        <div className="item19 e"><img id="16"src="no.png" alt="" draggable="true" height={25} width={25}/><p id="p16">我是17號</p></div>
-        <div className="item20 e"><img id="17"src="no.png" alt="" draggable="true" height={25} width={25}/><p id="p17">我是18號</p></div>
-        <div className="item21 e"><img id="18"src="no.png" alt="" draggable="true" height={25} width={25}/><p id="p18">我是19號</p></div>
-        <div className="item22 e"><img id="19"src="no.png" alt="" draggable="true" height={25} width={25}/><p id="p19">我是20號</p></div>
+        <div id='d0'className="item3 e"><img id='0'src="no.png" alt="" draggable="true" height={25} width={25} onMouseEnter={showdata} /><p id="p0">我是1號</p></div>
+        <div id='d1'className="item4 e"><img id='1'src="no.png" alt="" draggable="true" height={25} width={25} onMouseEnter={showdata}/><p id="p1">我是2號</p></div>
+        <div id='d2'className="item5 e"><img id='2'src="no.png" alt="" draggable="true" height={25} width={25} onMouseEnter={showdata}/><p id="p2">我是3號</p></div>
+        <div id='d3'className="item6 e"><img id='3'src="no.png" alt="" draggable="true" height={25} width={25} onMouseEnter={showdata}/><p id="p3">我是4號</p></div>
+        <div id='d4'className="item7 e"><img id='4'src="no.png" alt="" draggable="true" height={25} width={25} onMouseEnter={showdata}/><p id="p4">我是5號</p></div>
+        <div id='d5'className="item8 e"><img id='5'src="no.png" alt="" draggable="true" height={25} width={25} onMouseEnter={showdata}/><p id="p5">我是6號</p></div>
+        <div id='d6'className="item9 e"><img id='6'src="no.png" alt="" draggable="true" height={25} width={25} onMouseEnter={showdata}/><p id="p6">我是7號</p></div>
+        <div id='d7'className="item10 e"><img id='7'src="no.png" alt="" draggable="true" height={25} width={25} onMouseEnter={showdata}/><p id="p7">我是8號</p></div>
+        <div id='d8'className="item11 e"><img id='8'src="no.png" alt="" draggable="true" height={25} width={25} onMouseEnter={showdata}/><p id="p8">我是9號</p></div>
+        <div id='d9'className="item12 e"><img id='9'src="no.png" alt="" draggable="true" height={25} width={25} onMouseEnter={showdata}/><p id="p9">我是10號</p></div>
+        <div id='d10'className="item13 e"><img id='10'src="no.png" alt="" draggable="true" height={25} width={25} onMouseEnter={showdata}/><p id="p10">我是11號</p></div>
+        <div id='d11'className="item14 e"><img id='11'src="no.png" alt="" draggable="true" height={25} width={25} onMouseEnter={showdata}/><p id="p11">我是12號</p></div>
+        <div id='d12'className="item15 e"><img id='12'src="no.png" alt="" draggable="true" height={25} width={25} onMouseEnter={showdata}/><p id="p12">我是13號</p></div>
+        <div id='d13'className="item16 e"><img id='13'src="no.png" alt="" draggable="true" height={25} width={25} onMouseEnter={showdata}/><p id="p13">我是14號</p></div>
+        <div id='d14'className="item17 e"><img id='14'src="no.png" alt="" draggable="true" height={25} width={25} onMouseEnter={showdata}/><p id="p14">我是15號</p></div>
+        <div id='d15'className="item18 e"><img id='15'src="no.png" alt="" draggable="true" height={25} width={25} onMouseEnter={showdata}/><p id="p15">我是16號</p></div>
+        <div id='d16'className="item19 e"><img id='16'src="no.png" alt="" draggable="true" height={25} width={25} onMouseEnter={showdata}/><p id="p16">我是17號</p></div>
+        <div id='d17'className="item20 e"><img id='17'src="no.png" alt="" draggable="true" height={25} width={25} onMouseEnter={showdata}/><p id="p17">我是18號</p></div>
+        <div id='d18'className="item21 e"><img id='18'src="no.png" alt="" draggable="true" height={25} width={25} onMouseEnter={showdata}/><p id="p18">我是19號</p></div>
+        <div id='d19'className="item22 e"><img id='19'src="no.png" alt="" draggable="true" height={25} width={25} onMouseEnter={showdata}/><p id="p19">我是20號</p></div>
         <div  id="footerform" className="item23">
           <form>
             <label >名子:</label><input className="inputarea" type="text" onChange={(event)=>{setName(event.target.value)}} ></input>

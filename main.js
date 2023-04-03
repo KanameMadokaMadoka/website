@@ -1,16 +1,18 @@
 import "./App2.css";
 import { useState} from "react";
 import Axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 function App2() {
-    const [name, setName] = useState("Akemi");
-    const [model, setModel] = useState("EPSON");
-    const [category, setCategory] = useState("Printer");
-    const [year, setYear] = useState("2023");
-    const [code,setCode] = useState("123456789");
-    const [position,setPosition] = useState("1");
+    const [name, setName] = useState("");
+    const [model, setModel] = useState("");
+    const [category, setCategory] = useState("");
+    const [year, setYear] = useState("");
+    const [code,setCode] = useState("");
+    const [position,setPosition] = useState("");
     const [equipmentList, setEquipmentList] = useState([]);
     let user="Madoka";
+    let navigate =useNavigate();
     //新增設備
     const  addEquipment = () => {
         Axios.post("http://localhost:3001/createequipment", {
@@ -36,21 +38,23 @@ function App2() {
       }
     //獲取設備資訊和刷新
     const getandflash=()=>{
-      let a="",c="";
+      let a="",c="",tp="";
         //獲取設備資訊
         Axios.get("http://localhost:3001/equipment").then((response) => {
           let tmp =response.data.length;
           for(let i=0; i<tmp;i++){
+            tp=response.data[i].position-1;
             a=response.data[i].name;
             c=response.data[i].category;
-            document.getElementById("p"+i).innerText=a;
-            if(c==="printer"){document.getElementById(i).src="printer.png";}else if(c==="cmp"){document.getElementById(i).src="cmp.png";}else if(c==="ups"){document.getElementById(i).src="ups.png";}
+            document.getElementById("p"+tp).innerText=a;
+            document.getElementById(tp).alt=tp;
+            if(c==="printer"){document.getElementById(tp).src="printer.png"}else if(c==="cmp"){document.getElementById(tp).src="cmp.png"}else if(c==="ups"){document.getElementById(tp).src="ups.png"}
             setEquipmentList(response.data);
           };
         });
       }
     //獲取設備資訊
-    const test =() =>{
+    const get =() =>{
       getandflash()
     }
    //確認code和position是否有衝突和最大上限數量
@@ -68,32 +72,81 @@ function App2() {
     const a = document.getElementById("footerform");
     if(check()){addEquipment(); {window.alert("輸入成功"); a.style.visibility= "none";}}else{window.alert("輸入失敗");};
   }
+  //登出並跳轉回初始頁面
+  function logout(){
+        navigate("/")
+    }
+  
 
+  //顯示新增印表機
   const showinputdata= ()=>{
     const a =document.getElementById("footerform")
     a.style.visibility="visible";
   }
+  //不顯示新增印表機
   const delinputdata= ()=>{
     const a=document.getElementById("footerform")
     a.style.visibility="hidden";
   }
-  const deldata = (e) =>{
-    setCode(prompt('編號','123456789'));
-    if (code == null || "") {
-        window.alert("已經取消輸入");
-    } else {
-        window.alert("刪除成功");
-    }
+  const deldatagetid=()=>{
+    let delposition=prompt('要刪除的設備位置:')
+    deldata(delposition)
+    alert('已刪除')
+  }
+  const deldata = (position) => {
+    Axios.delete(`http://localhost:3001/deleteequipment/${position}`).then((response) => {
+      setEquipmentList(
+        equipmentList.filter((val) => {
+          return val.position !== position;
+        })
+      );
+    });
+  };
+
+  //即時顯示資料功能
+  const showdata =(e) =>{
+  if(e.target.alt!=''){
+    let tmp =equipmentList.length;
+     for(let i=0;i<tmp;i++){
+      let b=equipmentList[i].position-1
+        if(b==e.target.alt){
+        setName(equipmentList[i].name)
+        setModel(equipmentList[i].model)
+        setCategory(equipmentList[i].category)
+        setYear(equipmentList[i].year)
+        setCode(equipmentList[i].code)
+        setPosition(equipmentList[i].position)
+       }
+     }
+  }else{
+    setName('')
+    setModel('')
+    setCategory('')
+    setYear('')
+    setCode('')
+    setPosition('')
+  }
   }
 
-  const showdata =(e) =>{
-  setName(equipmentList[e.target.id].name)
-  setModel(equipmentList[e.target.id].model)
-  setCategory(equipmentList[e.target.id].category)
-  setYear(equipmentList[e.target.id].year)
-  setCode(equipmentList[e.target.id].code)
-  setPosition(equipmentList[e.target.id].position)
+  //拖放開始時的功能
+  const start=(e)=>{
+    console.log(e)
+    console.log('開始')
   }
+
+  //拖放結束時的功能
+  const handleDrop=(e)=>{
+    console.log(e.target.id)
+    console.log('結束!')
+  }
+
+  // 允許放置的處理
+  const handleAllowDrop = (e) => {
+    // 阻止預設的拖放事件
+    e.preventDefault();
+  };
+
+  //網頁跑好時自動執行函式的功能
   window.onload = getandflash()
 
 return(
@@ -102,8 +155,8 @@ return(
         <p>設備管理系統</p> 
         <button>匯出</button>
         <button>匯入</button>
-        <button onClick={test}>獲取資料</button>
-        <button>登出</button>
+        <button onClick={get}>獲取資料</button>
+        <button onClick={logout}>登出</button>
         </div>
         <div className="item2">
         <p>使用者: {user}</p>
@@ -116,10 +169,10 @@ return(
             <li>位置:{position}</li>
         </ul>
         <button onClick={showinputdata}>新增印表機</button>
-        <button onClick={delinputdata}>刪除印表機</button>
+        <button onClick={deldatagetid}>刪除印表機</button>
         </div>
-        <div id='d0'className="item3 e"><img id='0'src="no.png" alt="" draggable="true" height={25} width={25} onMouseEnter={showdata} /><p id="p0">我是1號</p></div>
-        <div id='d1'className="item4 e"><img id='1'src="no.png" alt="" draggable="true" height={25} width={25} onMouseEnter={showdata}/><p id="p1">我是2號</p></div>
+        <div id='d0'className="item3 e"><img id='0'src="no.png" alt="" draggable="true"  height={25} width={25} onMouseEnter={showdata} onDragOver={handleAllowDrop} onDrop={handleDrop} onDragStart={start}/><p id="p0">我是1號</p></div>
+        <div id='d1'className="item4 e"><img id='1'src="no.png" alt="" draggable="true" height={25} width={25} onMouseEnter={showdata} onDragOver={handleAllowDrop} onDrop={handleDrop} onDragStart={start}/><p id="p1">我是2號</p></div>
         <div id='d2'className="item5 e"><img id='2'src="no.png" alt="" draggable="true" height={25} width={25} onMouseEnter={showdata}/><p id="p2">我是3號</p></div>
         <div id='d3'className="item6 e"><img id='3'src="no.png" alt="" draggable="true" height={25} width={25} onMouseEnter={showdata}/><p id="p3">我是4號</p></div>
         <div id='d4'className="item7 e"><img id='4'src="no.png" alt="" draggable="true" height={25} width={25} onMouseEnter={showdata}/><p id="p4">我是5號</p></div>
@@ -187,6 +240,7 @@ return(
             <option value="19">19</option>
             </select>
             <input type="submit" value="送出" className="senddata" onClick={inputdata}></input>
+            <button className='senddata' onClick={delinputdata}>關閉</button>
           </form>
         </div>
       </div>

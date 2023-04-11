@@ -2,6 +2,12 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  width:100%;
+  height:100%;
+  height: 100vh;
+  background-size: cover;
+  background-image:url(./pic.jpg);
+  object-fit: cover;
 }
 
 .information {
@@ -13,6 +19,9 @@
 
 }
 
+.information label{
+  color:pink;
+}
 input {
   width: 300px;
   height: 50px;

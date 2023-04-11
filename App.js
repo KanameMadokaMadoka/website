@@ -2,6 +2,9 @@ import "./App.css";
 import { useState} from "react";
 import {useNavigate} from "react-router-dom";
 import Axios from "axios";
+import HashTableComponent from "./Componets/test";
+
+
 function App() {
   const [name, setName] = useState("");
   const [account, setAccount] = useState("");
@@ -26,6 +29,7 @@ function App() {
       }
     });
   };
+  
   
   const addEmployee = () => {
     Axios.post("http://localhost:3001/create", {
@@ -79,6 +83,8 @@ function App() {
     });
   };  
 
+
+
   return (
     <div className="App">
       <div className="information">
@@ -107,6 +113,8 @@ function App() {
         <button onClick={login}>login</button>
         <button onClick={jump}>mainpage</button>
         <button onClick={addEmployee}>register</button>
+        <h1>My App</h1>
+        <HashTableComponent />
       </div>
       <div className="employees">
         <button onClick={getEmployees}>Show Employees</button>

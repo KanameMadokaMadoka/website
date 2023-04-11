@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class HashTable {
+export class HashTable {
     constructor() {
       this.table = {};
     }
@@ -82,7 +82,7 @@ class HashTable {
   console.log(hashTable.contains('city'));
   
   // 清空哈希表
-  //  hashTable.clear();
+   hashTable.clear();
   
 
 
@@ -99,7 +99,6 @@ class HashTable {
     componentDidMount() {
       // 創建一個新的哈希表
       const hashTable = {};
-  
       // 添加鍵值對到哈希表
       hashTable['name'] = 'John';
       hashTable['age'] = 30;
@@ -107,7 +106,7 @@ class HashTable {
   
       this.setState({ hashTable });
     }
-  
+    
     render() {
       const { hashTable } = this.state;
   
@@ -125,6 +124,5 @@ class HashTable {
       );
     }
   }
-  
   export default HashTableComponent;
   

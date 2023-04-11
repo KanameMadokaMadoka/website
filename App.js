@@ -2,6 +2,7 @@ import "./App.css";
 import { useState} from "react";
 import {useNavigate} from "react-router-dom";
 import Axios from "axios";
+import {HashTable} from "./Componets/test";
 import HashTableComponent from "./Componets/test";
 
 
@@ -11,13 +12,26 @@ function App() {
   const [password, setPassword] = useState("");
   const [newpassword,setNewPassword] = useState();
   const [employeeList, setEmployeeList] = useState([]);
+  const [count,setCount] =useState([]);
   let navigate =useNavigate();
+
+  const handleIncrement = () => {
+    setCount(pasdfsef => pasdfsef + 1);
+  }
+  //測試哈希表的功能
+  const hashadd = () =>{
+    const hashTable = new HashTable()
+    hashTable.add(count,count+1)
+    console.log('以下是你輸入的哈希表')
+    console.log(hashTable.keys(),hashTable.values())
+    handleIncrement()
+  }
   //測試挑轉功能
   function jump(){
     //測試已OK 真的可以跳轉
     navigate("/main");
   }
-//登入和跳轉頁面功能
+  //登入和跳轉頁面功能
   function login(){
     Axios.post("http://localhost:3001/login",{
     account: account,
@@ -113,6 +127,7 @@ function App() {
         <button onClick={login}>login</button>
         <button onClick={jump}>mainpage</button>
         <button onClick={addEmployee}>register</button>
+        <button onClick={hashadd}>哈希表測試</button>
         <h1>My App</h1>
         <HashTableComponent />
       </div>

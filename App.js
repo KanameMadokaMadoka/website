@@ -4,6 +4,7 @@ import {useNavigate} from "react-router-dom";
 import Axios from "axios";
 import {HashTable} from "./Componets/test";
 import HashTableComponent from "./Componets/test";
+import { HasakiTable } from "./Componets/test2";
 
 
 function App() {
@@ -15,15 +16,39 @@ function App() {
   const [count,setCount] =useState([]);
   let navigate =useNavigate();
 
+  const hsakitable = new HasakiTable(100)
+  hsakitable.set('Madoka','Kaname')
+  hsakitable.set('Akemi','Houra')
+  hsakitable.set('sakura','kyoko')
+  console.log('我是hsakitbale的keys',hsakitable.Keys())
+  console.log('我是hsakitable的values',hsakitable.values())
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   const handleIncrement = () => {
-    setCount(pasdfsef => pasdfsef + 1);
+    setCount(prevCount => prevCount + 1);    
+    // 在使用 setter 函數更新狀態值時，React 會自動傳遞當前的狀態值給這個函數。而在 setCount(prevCount => prevCount + 1) 中，prevCount 就是這個傳遞進來的當前狀態值。
+    // 所以你可以隨意改變數名
   }
-  //測試哈希表的功能
+    //測試哈希表的功能
   const hashadd = () =>{
     const hashTable = new HashTable()
     hashTable.add(count,count+1)
     console.log('以下是你輸入的哈希表')
-    console.log(hashTable.keys(),hashTable.values())
+    console.log('我是hashTable的keys',hashTable.keys())
+    console.log('我是hashTable的Values',hashTable.values())
     handleIncrement()
   }
   //測試挑轉功能

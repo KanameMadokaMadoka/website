@@ -16,12 +16,18 @@ function App() {
   const [count,setCount] =useState([]);
   let navigate =useNavigate();
 
-  const hsakitable = new HasakiTable(100)
-  hsakitable.set('Madoka','Kaname')
+  const hsakitable = new HasakiTable(5)
+  hsakitable.set('Kaname','Madoka')
   hsakitable.set('Akemi','Houra')
   hsakitable.set('sakura','kyoko')
+  hsakitable.set('miki','sayaka')
+  hsakitable.set('tomoe','mami')
   console.log('我是hsakitbale的keys',hsakitable.Keys())
   console.log('我是hsakitable的values',hsakitable.values())
+  console.log('======================')
+  console.log(hsakitable.get('Kaname'))
+  console.log('======================')
+  console.log(hsakitable.get('miki'))
 
 
 

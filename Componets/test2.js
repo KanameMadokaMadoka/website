@@ -8,9 +8,9 @@ export class HasakiTable {
         let hash = 0;
         for (let i = 0; i < key.length; i++) {
           hash = (hash + key.charCodeAt(i) * i) % this.size
-          console.log('我是i',i)
         }
-        console.log('我是this.bucketSize',this.size)
+        console.log('==========================')
+        console.log('我的Key是',key)
         console.log('我的哈希是',hash)
         return hash;
     }
@@ -20,14 +20,20 @@ export class HasakiTable {
       const bucket = this.buckets[hash];
       for (let i = 0; i < bucket.length; i++) {
         const [k, v] = bucket[i];
+        console.log('此為set迴圈裡面的const [k, v] = bucket[i];',k,v,bucket[i])
         if (k === key) {
           // key already exists, update value
           bucket[i] = [key, value];
+          console.log('有衝突發生所在Key:',key)
+          console.log('他的值:',value)
+          console.log('他的i:',i)
           return;
         }
       }
       // key does not exist, add new key-value pair
       bucket.push([key, value]);
+      console.log('此為set方法裡面的bucket的長度:',bucket.length)
+      bucket.map(function(a){console.log('此為bucket的內容物在set方法裡面的',a)})
     }
   
     get(key) {
@@ -35,7 +41,9 @@ export class HasakiTable {
       const bucket = this.buckets[hash];
       for (let i = 0; i < bucket.length; i++) {
         const [k, v] = bucket[i];
+        console.log('我是get裡面的k,v,bucket[i]',k,v,bucket[i])
         if (k === key) {
+          console.log('有找到',k,'的值')
           return v;
         }
       }

@@ -39,23 +39,26 @@ function App2() {
     //獲取設備資訊和刷新
     const getandflash=()=>{
       let a="",c="",tp="";
-        //獲取設備資訊
-        Axios.get("http://localhost:3001/equipment").then((response) => {
-          let tmp =response.data.length;
-          for(let i=0; i<tmp;i++){
-            tp=response.data[i].position-1;
-            a=response.data[i].name;
-            c=response.data[i].category;
-            document.getElementById("p"+tp).innerText=a;
-            document.getElementById(tp).alt=tp;
-            if(c==="printer"){document.getElementById(tp).src="printer.png"}else if(c==="cmp"){document.getElementById(tp).src="cmp.png"}else if(c==="ups"){document.getElementById(tp).src="ups.png"}
-            setEquipmentList(response.data);
-          };
-        });
-      }
+      //獲取設備資訊
+      Axios.get("http://localhost:3001/equipment").then((response) => {
+      let tmp =response.data.length;
+      console.log('getandflash已被觸發');
+      for(let i=0; i<tmp;i++){
+      tp=response.data[i].position-1;
+      a=response.data[i].name;
+      c=response.data[i].category;
+      document.getElementById("p"+tp).innerText=a;
+      document.getElementById(tp).alt=tp;
+      if(c==="printer"){document.getElementById(tp).src="printer.png"}else if(c==="cmp"){document.getElementById(tp).src="cmp.png"}else if(c==="ups"){document.getElementById(tp).src="ups.png"}
+      };
+      });
+    }   
     //獲取設備資訊
     const get =() =>{
-      getandflash()
+      console.log('get已被觸發')
+      Axios.get("http://localhost:3001/equipment").then((response) => {
+        setEquipmentList(response.data)
+      });
     }
    //確認code和position是否有衝突和最大上限數量
    const check = (c,p) => {
@@ -67,17 +70,14 @@ function App2() {
    if(equipmentList[i].position===position){window.alert("位置上已有設備"); return false;}else{return true;}
   }
   }else{ window.alert("設備已達最大上限"); return false;}};
-
   const inputdata =() =>{
     const a = document.getElementById("footerform");
-    if(check()){addEquipment(); {window.alert("輸入成功"); a.style.visibility= "none";}}else{window.alert("輸入失敗");};
+    if(check()){addEquipment(); window.alert("輸入成功"); a.style.visibility= "none";}else{window.alert("輸入失敗");};
   }
   //登出並跳轉回初始頁面
   function logout(){
         navigate("/")
     }
-  
-
   //顯示新增印表機
   const showinputdata= ()=>{
     const a =document.getElementById("footerform")
@@ -90,21 +90,29 @@ function App2() {
   }
   const deldatagetid=()=>{
     let delposition=prompt('要刪除的設備位置:')
+    if(delposition<=0){
+      alert('請輸入1~20')
+    }else if(delposition>20){
+      alert('請輸入1~20')
+    }else{
     deldata(delposition)
     alert('已刪除')
+    }
   }
   const deldata = (position) => {
-    Axios.delete(`http://localhost:3001/deleteequipment/${position}`).then((response) => {
+    Axios.delete(`http://localhost:3001/deleteequipment/${position}`, {
+    }).then(() => {
       setEquipmentList(
         equipmentList.filter((val) => {
+          console.log('我是val!'+val.position)
           return val.position !== position;
         })
       );
     });
   };
-
   //即時顯示資料功能
   const showdata =(e) =>{
+    console.log(e.target.alt)
   if(e.target.alt!=''){
     let tmp =equipmentList.length;
      for(let i=0;i<tmp;i++){
@@ -127,25 +135,21 @@ function App2() {
     setPosition('')
   }
   }
-
   //拖放開始時的功能
   const start=(e)=>{
     console.log(e)
     console.log('開始')
   }
-
   //拖放結束時的功能
   const handleDrop=(e)=>{
     console.log(e.target.id)
     console.log('結束!')
   }
-
   // 允許放置的處理
   const handleAllowDrop = (e) => {
     // 阻止預設的拖放事件
     e.preventDefault();
   };
-
   //網頁跑好時自動執行函式的功能
   window.onload = getandflash()
 
@@ -218,7 +222,6 @@ return(
             <input className="inputarea"type="text" onChange={(event)=>{setCode(event.target.value)}}></input>
             <label >位置:</label>
             <select onChange={(event)=>{setPosition(event.target.value)}}>
-            <option value="0">0</option>
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
@@ -238,6 +241,7 @@ return(
             <option value="17">17</option>
             <option value="18">18</option>
             <option value="19">19</option>
+            <option value="20">20</option>
             </select>
             <input type="submit" value="送出" className="senddata" onClick={inputdata}></input>
             <button className='senddata' onClick={delinputdata}>關閉</button>

@@ -11,7 +11,6 @@ const db = mysql.createConnection({
   password: "ABCd@12345",
   database: "employeeSystem",
 });
-
 //登入
 app.post("/login",(req,res)=>{
  const account = req.body.account;
@@ -21,15 +20,12 @@ app.post("/login",(req,res)=>{
   [account],
   (err,result) => {
     if(err){
+      res.send(false);
       console.log(err);
-    }else if(user==""&&password===result[0].password){
+    }else if(password===result[0].password){
       res.send(true);
-      user =result[0].name;
-      console.log(result[0].name);
     }else {
       res.send(false);
-      console.log(user);
-      console.log("passwordwrong!!");
     }    
   }
   );
@@ -89,10 +85,6 @@ app.delete("/delete/:id", (req, res) => {
     }
   });
 });
-
-
-
-
 //新建設備
 app.post("/createequipment", (req, res) => {
   const name = req.body.name;
@@ -101,7 +93,6 @@ app.post("/createequipment", (req, res) => {
   const year = req.body.year;
   const code = req.body.code;
   const position =req.body.position;
-  
   db.query(
   "INSERT INTO equipment (name, model, category, year, code, position) VALUES (?,?,?,?,?,?)",
   [name, model, category, year, code, position],
@@ -112,7 +103,6 @@ app.post("/createequipment", (req, res) => {
   }
 );
 });
-
 //查詢設備
 app.get("/equipment", (req, res) => {
   db.query("SELECT * FROM equipment", (err, result) => {
@@ -123,7 +113,6 @@ app.get("/equipment", (req, res) => {
     }
   });
 });
-
 //修改設備
 app.put("/updateequipment", (req, res) => {
   const id = req.body.id;
@@ -144,7 +133,6 @@ app.put("/updateequipment", (req, res) => {
     }
   );
 });
-
 //刪除設備
 app.delete("/deleteequipment/:position", (req, res) => {
   const position = req.params.position;
@@ -156,10 +144,6 @@ app.delete("/deleteequipment/:position", (req, res) => {
     }
   });
 });
-
-
-
-
 app.listen(3001, () => {
   console.log("Yey, your server is running on port 3001");
 });

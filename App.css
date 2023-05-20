@@ -1,4 +1,4 @@
-body{
+/* body{
   margin:0;
   padding:0;
   box-sizing: border-box;
@@ -6,7 +6,7 @@ body{
   background-position: center;
   height: 100vh;
   background-image:url(./pic.jpg);
-}
+} */
 
 .App {
   display: flex;
